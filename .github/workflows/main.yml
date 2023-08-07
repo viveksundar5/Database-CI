@@ -1,0 +1,59 @@
+name: Database-cI
+
+on:
+  workflow_dispatch
+  #workflow_call:
+    #secrets:
+      #Workflow2_PAT_TOKEN_GITHUB:
+        #required: true
+env:
+  JAVA_VERSION: '17' 
+  SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+  GITHUB_TOKEN: ${{ secrets.PAT_TOKEN}}
+      
+jobs:
+  build:
+    name: Database ci sonar build
+    runs-on: ubuntu-latest
+      
+    steps:
+      - name: Checkout from Repo
+        uses: actions/checkout@v3
+      - name: Reformat SQL Files
+        uses: credfeto/action-sql-format@v1.4.1
+          
+      - name: Setup Java Sdk ${{env.JAVA_VERSION}}
+        uses: actions/setup-java@v3
+        with:
+          java-version: ${{env.JAVA_VERSION}}
+          distribution: 'temurin'
+          
+      #- name: Cache SonarQube packages
+        #uses: actions/cache@v3
+        #with:
+         # path: ~/.sonar/cache
+          #key: ${{ runner.os }}-sonar
+          #restore-keys: ${{ runner.os }}-sonar
+          
+      - name: Cache Maven packages
+        uses: actions/cache@v3
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-m2
+          
+      - name: Run SonarQube Scan
+        run: |
+          echo "SONAR URL - > " ${{vars.SONAR_HOST_URL}}
+          #export SONAR_TOKEN=${{ secrets.SONAR_TOKEN }}
+          export SONAR_HOST_URL=${{vars.SONAR_HOST_URL}}
+          mvn install sonar:sonar \
+            -D sonar.projectKey=test-maven-project \
+            -D sonar.host.url=$SONAR_HOST_URL \
+            -D sonar.login=admin -D sonar.password=admin123 
+            
+      - name: Build project with Maven
+        run: mvn -B package --file pom.xml	 
+        
+      - name: Publish package
+        run: mvn --batch-mode deploy
