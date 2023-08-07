@@ -1,4 +1,4 @@
-name: java-maven-sonar-ci
+name: Database-CI
 
 on:
   workflow_dispatch:
