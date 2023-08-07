@@ -43,8 +43,9 @@ jobs:
       - name: Run SonarQube Scan
         run: |
           echo "SONAR URL - > " ${{vars.SONAR_HOST_URL}}
-          #export SONAR_TOKEN=${{ secrets.SONAR_TOKEN }}
+          export SONAR_TOKEN=${{ secrets.SONAR_TOKEN }}
           export SONAR_HOST_URL=${{vars.SONAR_HOST_URL}}
+          export GITHUB_TOKEN=${{ secrets.PAT_TOKEN }}
           #mvn install sonar:sonar \
             #-D sonar.projectKey=test-maven-project \
             #-D sonar.host.url=$SONAR_HOST_URL \
