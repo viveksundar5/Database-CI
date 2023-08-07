@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>RAK.app</groupId>
-    <artifactId>java-maven-sonar-packages</artifactId>
+    <artifactId>Database-CI-packages</artifactId>
     <version>1.0-SNAPSHOT</version>
 
     <properties>
@@ -18,7 +18,7 @@
     <repository>
       <id>github</id>
       <name>GitHub Packages</name>
-      <url>https://maven.pkg.github.com/viveksundar5/Database-Database-CI</url>
+      <url>https://maven.pkg.github.com/viveksundar5/Database-CI</url>
     </repository>
   </distributionManagement>         
 
